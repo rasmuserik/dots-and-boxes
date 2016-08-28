@@ -1,12 +1,7 @@
 <html>
-  <body style="margin:0;padding:0;background:black">
-  <video 
-    style="width:100%" 
-    id=vid src=assets/20160828_094238.mp4></video>
-  <script>
-setTimeout(function() {
-  vid.play();
-}, 1000);
-  </script>
+  <body style="background:black">
+  <video style="position:absolute;top:0;left:0;width:100%" id=video src=assets/20160828_094238.mp4></video>
+  <canvas style="position:absolute;top:0;left:0;width:100%" width=1024 height=512 id=canvas></canvas>
+  <script src=index.js></script>
   </body>
 </html>
