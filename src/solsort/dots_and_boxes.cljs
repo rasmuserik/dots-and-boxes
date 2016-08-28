@@ -12,12 +12,14 @@
    [[440 141] [432 222] [421 330] [419 434]]
    [[563 162] [557 243] [553 330] [542 436]]])
 (def pts (doall (for [x (range 4) y (range 4)] [x y])))
-(def boxes (doall (for [x (range 3) y (range 3)]
-                          (sort (for [x1 [0 1] y1 [0 1]]
-                                [(+ x x1) + y y1])))))
-(defn coords [[x y]]
-  (map #(+ % -6 (* 12 (js/Math.random)))
-   (get (get point-coords x) y)))
+(def boxes (doall (for [y (range 3) x (range 3)]
+                    [[[x y] [x (inc y)]]
+                      [[x y] [(inc x) y]]
+                      [[(inc x) y] [(inc x) (inc y)]]
+                      [[x (inc y)] [(inc x) (inc y)]]])))
+(defn coords [[x y]] (get (get point-coords x) y))
+(def box-centers
+  [[240 160] [370 175] [490 187] [230 265] [365 275] [483 277] [200 377] [350 380] [479 383]])
 (defn square [x] (* x x))
 (defn dist [[x1 y1] [x2 y2]] (js/Math.sqrt (+ (square (- x1 x2)) (square (- y1 y2)))))
 (defn log [& args] (js/console.log.apply js/console (clj->js args)))
@@ -37,12 +39,23 @@
   (when-not (@lines [a b])
     (swap! lines conj [a b])
     (line (coords a) (coords b))
-    (swap! wins
-           (map
-            (fn [win box])
-            
-            ) wins boxes)
+    (reset! wins
+            (doall
+             (map
+              (fn [win box]
+                (or win (and (not (some nil? (map @lines box))) player)))
+              @wins boxes)))
+    (doall
+     (map
+      (fn [winner pos]
+        (log winner pos)
+        (when winner
+          (.fillRect ctx (first pos) (second pos) 2 2))
+        )
+      @wins box-centers))
+   ; (log @wins)
     ))
+
 (defn handle-click [x y]
   (let [scale (/ 1024 js/window.innerWidth)
         x (* scale x)
@@ -50,7 +63,7 @@
         pos [x y]
         [a b] (sort (take 2 (sort-by #(dist pos (coords %)) pts)))]
     (add-line a b :human)
-    (log (prn-str pts))))
+    (log pos)))
 
 (aset canvas "onmousedown" #(handle-click (aget % "clientX") (aget % "clientY")))
 (doto ctx
