@@ -1,5 +1,5 @@
 * Dots and Boxes [[https://dots-and-boxes.solsort.com/icon-small.png]]
 
-Quick game prototype for [[Ludum Dare 36][http://ludumdare.com/compo/ludum-dare-36/]], with theme: ancient tools.
+Quick game prototype for [[http://ludumdare.com/compo/ludum-dare-36/][Ludum Dare 36]], with theme: ancient tools.
 
 Try it online on https://dots-and-boxes.solsort.com/.
